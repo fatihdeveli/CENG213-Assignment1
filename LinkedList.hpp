@@ -10,8 +10,8 @@ using namespace std;
 template <class T>
 class LinkedList {
 private:
-    Node<T>* head; 
-    int length;  
+    Node<T>* head;
+    int length;
 public:
 
     LinkedList();
@@ -24,7 +24,7 @@ public:
     Node<T>* first() const;
     Node<T>* findPrev(const T& data) const;
     Node<T>* findNode(const T& data) const;
-    void insertNode(Node<T>* prev, const T& data); 
+    void insertNode(Node<T>* prev, const T& data);
     void deleteNode(Node<T>* prevNode);
     void clear();
     size_t getLength() const;
@@ -48,24 +48,25 @@ void LinkedList<T>::print() const {
 
 template <class T>
 LinkedList<T>::LinkedList () {
-    head = NULL;
+    head = new Node<T>();
     length = 0;
 }
-
+/*
 template<class T>
 LinkedList<T>::LinkedList(const LinkedList<T> &ll) {
     head = ll.head;
     length = ll.length;
 }
-/*
+
 template<class T>
 LinkedList<T> &LinkedList<T>::operator=(const LinkedList<T> &ll) {
     return <#initializer#>;
 }
 */
 template<class T>
-LinkedList<T>::~LinkedList() {
-
+LinkedList<T>::~LinkedList() { // TODO: FIX MEMORY LEAK
+    clear();
+    delete head;
 }
 
 template<class T>
@@ -104,24 +105,15 @@ Node<T> *LinkedList<T>::findNode(const T &data) const {
 
 template<class T>
 void LinkedList<T>::insertNode(Node<T> *prev, const T &data) {
-    if (length == 0) {
+    if (prev) {
         Node<T>* newNode = new Node<T>(data); // Create the new node
-        head = newNode;
-        length++;
-    }
-    else if (prev) {
-        Node<T>* newNode = new Node<T>(data); // Create the new node
-        cout << "Created new node" << endl;
         if (prev->getNext()) { // Insert in the middle
             Node<T> *temp = prev->getNext();
             prev->setNext(newNode);
             newNode->setNext(temp);
         }
         else { // Insert at the end
-            cout << newNode->getData() << endl;
-            cout << prev->getData() << endl;
             prev->setNext(newNode);
-            cout << "inserted" << endl;
         }
         length++;
     }
@@ -145,7 +137,7 @@ void LinkedList<T>::deleteNode(Node<T> *prevNode) {
 
 template<class T>
 void LinkedList<T>::clear() {
-    for (Node<T> next, temp = head->getNext(); temp; temp = next) {
+    for (Node<T> *next, *temp = first(); temp; temp = next) {
         next = temp->getNext();
         delete temp;
     }
@@ -165,5 +157,4 @@ void LinkedList<T>::swap(int index1, int index2) {
 
 
 /* end of your implementations*/
-#endif	
-
+#endif
