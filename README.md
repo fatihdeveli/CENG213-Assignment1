@@ -1,2 +1,2 @@
-# CENG213-THE1
-Solution of Take Home Exam 1 of CENG213 - Data Structures
+# CENG213-PA1
+CENG213 - Data Structures Programming Assignment 1 solution
