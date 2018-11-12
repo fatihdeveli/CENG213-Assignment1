@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Project related specific files
+README.txt
+outputs/
+listVideo10.txt
+listUser10.txt
