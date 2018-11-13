@@ -68,6 +68,7 @@
 
 # CMake
 cmake-build-*/
+CMakeLists.txt
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
@@ -126,3 +127,7 @@ README.txt
 outputs/
 listVideo10.txt
 listUser10.txt
+myMain.cpp
+main_LinkedList
+main_VideoShare
+myMain
