@@ -70,6 +70,6 @@ int main(int argc, char* argv[]) {
     cout << "test 2" << endl;
     test_insert_delete();
     cout<<"test 3"<<endl;
-    //test_copy_constructor();
+    test_copy_constructor();
     return 0;
 } 

@@ -62,10 +62,31 @@ int main(int argc, char* argv[]) {
 
     cout << "Subscriptions of userName341" << endl;
     vs1.printUserSubscriptions("userName341");
-    
+    //printing Common Subscriptions    
     cout<<"printCommonSubscriptions"<<endl;
     vs1.sortUserSubscriptions("userName056");
     vs1.sortUserSubscriptions("userName341");
     vs1.printCommonSubscriptions("userName341","userName056");
+    
+    cout<<"ADDITIONAL TESTS.."<<endl;
+    vs1.subscribe("userName392", "title353");
+    vs1.subscribe("userName392", "title384");
+    vs1.subscribe("userName392", "title343");
+    
+    vs1.subscribe("userName265", "title311");
+    vs1.subscribe("userName265", "title061");
+    vs1.subscribe("userName265", "title384");
+    
+    vs1.subscribe("userName163", "title353");
+    vs1.subscribe("userName163", "title109");
+    vs1.subscribe("userName163", "title061");
+    vs1.subscribe("userName163", "title384");
+    //printing Friend Subscriptions    
+    cout << "Subscriptions of userName284's friends" << endl;    
+    vs1.printFriendSubscriptions("userName284");
+    cout << "Subscriptions of userName341's friends" << endl;        
+    vs1.printFriendSubscriptions("userName341");
+    cout<<"END OF TESTS.."<<endl;
+    
     return 0;
 }
