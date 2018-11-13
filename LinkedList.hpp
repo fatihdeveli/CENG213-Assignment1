@@ -51,13 +51,23 @@ LinkedList<T>::LinkedList () {
     head = new Node<T>();
     length = 0;
 }
-/*
+
 template<class T>
 LinkedList<T>::LinkedList(const LinkedList<T> &ll) {
-    head = ll.head;
+    head = new Node<T>();
     length = ll.length;
-}
+    if (ll.first()) {
+        Node<T> *newNode = new Node<T>(ll.first()->getData());
+        head->setNext(newNode);
 
+        for (Node<T> *temp = ll.first()->getNext(); temp; temp = temp->getNext()) {
+            newNode->setNext(new Node<T>(temp->getData()));
+            newNode = newNode->getNext();
+        }
+    }
+
+}
+/*
 template<class T>
 LinkedList<T> &LinkedList<T>::operator=(const LinkedList<T> &ll) {
     return <#initializer#>;
@@ -66,6 +76,7 @@ LinkedList<T> &LinkedList<T>::operator=(const LinkedList<T> &ll) {
 template<class T>
 LinkedList<T>::~LinkedList() { // TODO: FIX MEMORY LEAK
     clear();
+    cout<< "Deleting head" <<endl;
     delete head;
 }
 
@@ -78,7 +89,7 @@ template<class T>
 Node<T> *LinkedList<T>::first() const {
     return head->getNext();
 }
-
+/*
 template<class T>
 Node<T> *LinkedList<T>::findPrev(const T &data) const {
     Node<T>* prev = head;
@@ -102,10 +113,11 @@ Node<T> *LinkedList<T>::findNode(const T &data) const {
     }
     return NULL;
 }
-
+*/
 template<class T>
 void LinkedList<T>::insertNode(Node<T> *prev, const T &data) {
     if (prev) {
+        cout << "Creating node" << endl;
         Node<T>* newNode = new Node<T>(data); // Create the new node
         if (prev->getNext()) { // Insert in the middle
             Node<T> *temp = prev->getNext();
@@ -139,9 +151,10 @@ template<class T>
 void LinkedList<T>::clear() {
     for (Node<T> *next, *temp = first(); temp; temp = next) {
         next = temp->getNext();
+        cout << "deleting " << temp->getData() << endl;
+        cout << "Deleting node" << endl;
         delete temp;
     }
-    head = NULL;
     length = 0;
 }
 
