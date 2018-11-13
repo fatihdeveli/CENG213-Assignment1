@@ -52,7 +52,7 @@ LinkedList<T>::LinkedList () {
     length = 0;
 }
 
-template<class T>
+template<class T> // TODO: Comment
 LinkedList<T>::LinkedList(const LinkedList<T> &ll) {
     head = new Node<T>();
     length = ll.length;
@@ -65,18 +65,26 @@ LinkedList<T>::LinkedList(const LinkedList<T> &ll) {
             newNode = newNode->getNext();
         }
     }
+}
 
-}
-/*
-template<class T>
+template<class T> // TODO: Comment
 LinkedList<T> &LinkedList<T>::operator=(const LinkedList<T> &ll) {
-    return <#initializer#>;
+    if (this != &ll) {
+        clear();
+        const Node<T> *r = ll.first();
+        Node<T> *p = head;
+        while(r) {
+            insertNode(p, ll.getData());
+            p = p->getNext();
+            r = r->getNext();
+        }
+    }
+    return *this;
 }
-*/
+
 template<class T>
-LinkedList<T>::~LinkedList() { // TODO: FIX MEMORY LEAK
+LinkedList<T>::~LinkedList() {
     clear();
-    cout<< "Deleting head" <<endl;
     delete head;
 }
 
@@ -89,7 +97,7 @@ template<class T>
 Node<T> *LinkedList<T>::first() const {
     return head->getNext();
 }
-/*
+
 template<class T>
 Node<T> *LinkedList<T>::findPrev(const T &data) const {
     Node<T>* prev = head;
@@ -113,11 +121,10 @@ Node<T> *LinkedList<T>::findNode(const T &data) const {
     }
     return NULL;
 }
-*/
+
 template<class T>
 void LinkedList<T>::insertNode(Node<T> *prev, const T &data) {
     if (prev) {
-        cout << "Creating node" << endl;
         Node<T>* newNode = new Node<T>(data); // Create the new node
         if (prev->getNext()) { // Insert in the middle
             Node<T> *temp = prev->getNext();
@@ -151,8 +158,6 @@ template<class T>
 void LinkedList<T>::clear() {
     for (Node<T> *next, *temp = first(); temp; temp = next) {
         next = temp->getNext();
-        cout << "deleting " << temp->getData() << endl;
-        cout << "Deleting node" << endl;
         delete temp;
     }
     length = 0;
@@ -162,12 +167,12 @@ template<class T>
 size_t LinkedList<T>::getLength() const {
     return length * sizeof(T);
 }
-
+/*
 template<class T>
 void LinkedList<T>::swap(int index1, int index2) {
-
+    for ()
 }
-
+*/
 
 /* end of your implementations*/
 #endif
