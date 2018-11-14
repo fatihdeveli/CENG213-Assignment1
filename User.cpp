@@ -36,10 +36,12 @@ User::User(string username, string name, string surname) {
     this->username = username;
     this->name = name;
     this->surname = surname;
+    this->status = ACTIVE;
 }
 
 User::~User() {
-
+    subscriptions.clear();
+    friends.clear();
 }
 
 const string &User::getUsername() const {
@@ -63,29 +65,29 @@ void User::updateStatus(Status st) {
 }
 
 void User::subscribe(Video *video) {
-
+    subscriptions.insertNode(subscriptions.getHead(), video);
 }
 
 void User::unSubscribe(Video *video) {
-
+    subscriptions.deleteNode(subscriptions.findPrev(video));
 }
 
 void User::addFriend(User *user) {
-
+    friends.insertNode(friends.getHead(), user);
 }
 
 void User::removeFriend(User *user) {
-
+    friends.deleteNode(friends.findPrev(user));
 }
 
 LinkedList<Video *> *User::getSubscriptions() {
-    return NULL;
+    return &subscriptions;
 }
 
 LinkedList<User *> *User::getFriends() {
-    return NULL;
+    return &friends;
 }
 
 bool User::operator==(const User &rhs) const {
-    return false;
+    return username == rhs.username;
 }

@@ -52,7 +52,7 @@ LinkedList<T>::LinkedList () {
     length = 0;
 }
 
-template<class T> // TODO: Comment
+template<class T>
 LinkedList<T>::LinkedList(const LinkedList<T> &ll) {
     head = new Node<T>();
     length = ll.length;
@@ -67,14 +67,14 @@ LinkedList<T>::LinkedList(const LinkedList<T> &ll) {
     }
 }
 
-template<class T> // TODO: Comment
+template<class T>
 LinkedList<T> &LinkedList<T>::operator=(const LinkedList<T> &ll) {
     if (this != &ll) {
         clear();
-        const Node<T> *r = ll.first();
+        const Node<T> *r = ll.first(); // Temp node to iterate through rhs
         Node<T> *p = head;
         while(r) {
-            insertNode(p, ll.getData());
+            insertNode(p, r->getData());
             p = p->getNext();
             r = r->getNext();
         }
@@ -167,12 +167,20 @@ template<class T>
 size_t LinkedList<T>::getLength() const {
     return length * sizeof(T);
 }
-/*
+
 template<class T>
 void LinkedList<T>::swap(int index1, int index2) {
-    for ()
+    Node<T> *tempNode = first(); // Node with index 0
+    int i;
+    for (i = 0; i < index1; i++) tempNode = tempNode->getNext(); // Find the node with index: index1
+    T* data1Ptr = tempNode->getDataPtr();
+    for (i = index1; i < index2; i++) tempNode = tempNode->getNext(); // Find the node with index: index2
+    T data2 = tempNode->getData(); // Save the data at index2
+    T* data2Ptr = tempNode->getDataPtr();
+    *data2Ptr = *data1Ptr; // Change the data of the node at index2
+    *data1Ptr = data2; // Change the data of the node at index1
 }
-*/
+
 
 /* end of your implementations*/
 #endif
