@@ -74,25 +74,39 @@ void VideoShare::loadVideos(const string &fileName) {
 
 void VideoShare::addFriendship(const string &userName1, const string &userName2) {
     if (userName1.empty() || userName2.empty()) return;
-    cout << "test1" << endl;
-    Node <User>* userNode1 = users.findNode(userName1);cout << "test2" << endl;
-    Node <User>* userNode2 = users.findNode(userName2);cout << "test3" << endl;
+    Node <User>* userNode1 = users.findNode(userName1);
+    Node <User>* userNode2 = users.findNode(userName2);
     if (!userNode1 || !userNode2) return;
-    User* user1 = userNode1->getDataPtr();cout << "test4" << endl;
-    User* user2 = userNode2->getDataPtr();cout << "test5" << endl;
-    user1->addFriend(user2);cout << "test6" << endl;
-    user2->addFriend(user1);cout << "test7" << endl;
+    User* user1 = userNode1->getDataPtr();
+    User* user2 = userNode2->getDataPtr();
+    user1->addFriend(user2);
+    user2->addFriend(user1);
 }
 
 void VideoShare::removeFriendship(const string &userName1, const string &userName2) {
-
+    User user1 = User(userName1);
+    User user2 = User(userName2);
+    Node<User>* userNode1 = users.findNode(user1); // Pointer to the node in the friends list
+    Node<User>* userNode2 = users.findNode(user2); //
+    User* user1Ptr = userNode1->getDataPtr(); // Pointer to the user (of the node) in the friends list
+    User* user2Ptr = userNode2->getDataPtr(); //
+    userNode1->getDataPtr()->removeFriend(user2Ptr); // Remove user2 from user1's friend list
+    userNode2->getDataPtr()->removeFriend(user1Ptr); // Remove user1 from user2's friend list
 }
 
 void VideoShare::updateUserStatus(const string &userName, Status newStatus) {
-
+    User user = User(userName);
+    Node<User>* userNode1 = users.findNode(user); // Pointer to the node in the friends list
+    userNode1->getDataPtr()->updateStatus(newStatus);
 }
 
 void VideoShare::subscribe(const string &userName, const string &videoTitle) {
+    Node <User>* userNode = users.findNode(User(userName));
+    Node <Video>* videoNode = videos.findNode(Video(videoTitle));
+    User* userPtr = userNode->getDataPtr();
+    Video* videoPtr = videoNode->getDataPtr();
+
+    userPtr->subscribe(videoPtr);
 
 }
 
@@ -109,11 +123,15 @@ void VideoShare::sortUserSubscriptions(const string &userName) {
 }
 
 void VideoShare::printUserSubscriptions(const string &userName) {
-
+    User user = User(userName);
+    Node<User>* userNode = users.findNode(user);
+    userNode->getData().printSubscriptions();
 }
 
 void VideoShare::printFriendsOfUser(const string &userName) {
-
+    User user = User(userName);
+    Node<User>* tempNode = users.findNode(user);
+    tempNode->getData().printFriends();
 }
 
 void VideoShare::printCommonSubscriptions(const string &userName1, const string &userName2) {

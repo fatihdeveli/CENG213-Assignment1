@@ -40,8 +40,6 @@ User::User(string username, string name, string surname) {
 }
 
 User::~User() {
-    subscriptions.clear();
-    friends.clear();
 }
 
 const string &User::getUsername() const {

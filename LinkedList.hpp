@@ -169,18 +169,31 @@ size_t LinkedList<T>::getLength() const {
 }
 
 template<class T>
-void LinkedList<T>::swap(int index1, int index2) {
-    Node<T> *tempNode = first(); // Node with index 0
-    int i;
-    for (i = 0; i < index1; i++) tempNode = tempNode->getNext(); // Find the node with index: index1
-    T* data1Ptr = tempNode->getDataPtr();
-    for (i = index1; i < index2; i++) tempNode = tempNode->getNext(); // Find the node with index: index2
-    T data2 = tempNode->getData(); // Save the data at index2
-    T* data2Ptr = tempNode->getDataPtr();
-    *data2Ptr = *data1Ptr; // Change the data of the node at index2
-    *data1Ptr = data2; // Change the data of the node at index1
-}
+void LinkedList<T>::swap(int index1, int index2) { // Pointer swap
 
+    Node<T>* node1, *node1prev, *node2, *node2prev;
+    // Find the node with index1 and its previous
+    node1prev = head;
+    node1 = node1prev->getNext();
+    for (int i = 1; i < index1; i++) {
+        node1prev = node1prev->getNext();
+        node1 = node1->getNext();
+    }
+
+    // Find the node with index2 and its previous
+    node2prev = node1prev;
+    node2 = node2prev->getNext();
+    for (int i = index1; i < index2; i++) {
+        node2prev = node2prev->getNext();
+        node2 = node2->getNext();
+    }
+
+    Node<T>* temp = node2->getNext();
+    node2->setNext(node1->getNext());
+    node2prev->setNext(node1);
+    node1->setNext(temp);
+    node1prev->setNext(node2);
+}
 
 /* end of your implementations*/
 #endif
