@@ -22,8 +22,7 @@ VideoShare::VideoShare() {
 }
 
 VideoShare::~VideoShare() {
-    users.clear();
-    videos.clear();
+    // users.clear() was removed from here
 }
 
 void VideoShare::createUser(const string &userName, const string &name, const string &surname) {
@@ -36,10 +35,9 @@ void VideoShare::loadUsers(const string &fileName) {
     ifstream usersFile;
     string line;
     usersFile.open(fileName.c_str());
-    while (usersFile.good()) { // Read a line
-        getline(usersFile, line);cout << "1" << endl;
-        stringstream ss(line);cout << "2" << endl;
-        string username, name, surname;cout << "3" << endl;
+    while (usersFile.good() && getline(usersFile, line)) { // Read a line
+        stringstream ss(line);
+        string username, name, surname;
         // Read 3 fields
         getline(ss, username, ';'); // Username
         if (username.empty()) continue; // A user must have a username
@@ -47,9 +45,9 @@ void VideoShare::loadUsers(const string &fileName) {
         getline(ss, surname, ';'); // Surname
         User newUser(username, name, surname);
         users.insertNode(users.getHead(), newUser);
+
     }
     usersFile.close();
-
 }
 
 void VideoShare::createVideo(const string &title, const string &genre) {
@@ -76,13 +74,14 @@ void VideoShare::loadVideos(const string &fileName) {
 
 void VideoShare::addFriendship(const string &userName1, const string &userName2) {
     if (userName1.empty() || userName2.empty()) return;
-    Node <User>* userNode1 = users.findNode(userName1);
-    Node <User>* userNode2 = users.findNode(userName2);
+    cout << "test1" << endl;
+    Node <User>* userNode1 = users.findNode(userName1);cout << "test2" << endl;
+    Node <User>* userNode2 = users.findNode(userName2);cout << "test3" << endl;
     if (!userNode1 || !userNode2) return;
-    User* user1 = userNode1->getDataPtr();
-    User* user2 = userNode2->getDataPtr();
-    user1->addFriend(user2);
-    user2->addFriend(user1);
+    User* user1 = userNode1->getDataPtr();cout << "test4" << endl;
+    User* user2 = userNode2->getDataPtr();cout << "test5" << endl;
+    user1->addFriend(user2);cout << "test6" << endl;
+    user2->addFriend(user1);cout << "test7" << endl;
 }
 
 void VideoShare::removeFriendship(const string &userName1, const string &userName2) {
@@ -128,4 +127,3 @@ void VideoShare::printFriendSubscriptions(const string &userName) {
 bool VideoShare::isConnected(const string &userName1, const string &userName2) {
     return false;
 }
-
