@@ -165,7 +165,7 @@ void LinkedList<T>::clear() {
 
 template<class T>
 size_t LinkedList<T>::getLength() const {
-    return length * sizeof(T);
+    return length;
 }
 
 template<class T>

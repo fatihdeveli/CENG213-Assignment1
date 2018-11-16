@@ -104,22 +104,52 @@ void VideoShare::subscribe(const string &userName, const string &videoTitle) {
     Node <User>* userNode = users.findNode(User(userName));
     Node <Video>* videoNode = videos.findNode(Video(videoTitle));
     User* userPtr = userNode->getDataPtr();
-    Video* videoPtr = videoNode->getDataPtr();
-
-    userPtr->subscribe(videoPtr);
-
+    if (userPtr->getStatus() == ACTIVE) {
+        Video* videoPtr = videoNode->getDataPtr();
+        userPtr->subscribe(videoPtr);
+    }
 }
 
 void VideoShare::unSubscribe(const string &userName, const string &videoTitle) {
-
+    Node<User>* userNode = users.findNode(User(userName));
+    Node<Video>* videoNode = videos.findNode(Video(videoTitle));
+    User* userPtr = userNode->getDataPtr();
+    if (userPtr->getStatus() == ACTIVE) {
+        Video* videoPtr = videoNode->getDataPtr();
+        userPtr->unSubscribe(videoPtr);
+    }
 }
 
 void VideoShare::deleteUser(const string &userName) {
+    Node<User>* userNode = users.findNode(User(userName));
+    User* user = userNode->getDataPtr();
 
+    // Remove all friendships of the user
+    for (Node<User> *temp = users.first(); temp; temp = temp->getNext()) {
+        temp->getDataPtr()->removeFriend(user);
+    }
+    users.deleteNode(users.findPrev(*user));
 }
 
-void VideoShare::sortUserSubscriptions(const string &userName) {
+void VideoShare::sortUserSubscriptions(const string &userName) { // TODO: fix
+    Node<User>* userNode = users.findNode(User(userName));
+    User* user = userNode->getDataPtr();
+    LinkedList<Video*>* userSubs = user->getSubscriptions();
 
+    // Bubble sort
+    Node<Video*> *tempi = userSubs->first(); // Node at index i
+    int n = userSubs->getLength();
+    bool sorted = false;
+    for (int i = 0; (i < n-1) && !sorted; i++, tempi=tempi->getNext()) {
+        sorted = true;
+        Node<Video*> *tempj = userSubs->first(); // Node at index j-1
+        for (int j = 1; j <= n-i-1; j++, tempi=tempi->getNext()) {
+            if (tempj->getData()->getTitle() > tempj->getNext()->getData()->getTitle()) {
+                userSubs->swap(j, j-1);
+                sorted = false;
+            }
+        }
+    }
 }
 
 void VideoShare::printUserSubscriptions(const string &userName) {
