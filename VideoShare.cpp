@@ -52,7 +52,7 @@ void VideoShare::loadUsers(const string &fileName) {
 
 void VideoShare::createVideo(const string &title, const string &genre) {
     Video* video = new Video(title, genre);
-    videos.insertNode(videos.findPrev(*video), *video);
+    videos.insertNode(videos.getHead(), *video);
 }
 
 void VideoShare::loadVideos(const string &fileName) {
@@ -126,6 +126,13 @@ void VideoShare::deleteUser(const string &userName) {
     if (!userNode) return;
     User* userPtr = userNode->getDataPtr();
 
+    Node<User*>* temp = userNode->getDataPtr()->getFriends()->first();
+    while(temp)
+    {
+        removeFriendship(userName,temp->getData()->getUsername());
+        temp = temp->getNext();
+    }
+
     // Remove all friendships of the user
     for (Node<User> *temp = users.first(); temp; temp = temp->getNext()) {
         temp->getDataPtr()->removeFriend(userPtr);
@@ -190,7 +197,27 @@ void VideoShare::printCommonSubscriptions(const string &userName1, const string 
 }
 
 void VideoShare::printFriendSubscriptions(const string &userName) {
-    
+
+    User user = User(userName);
+    Node<User>* userNode = users.findNode(user);
+    if (!userNode) return;
+    User* userPtr = userNode->getDataPtr();
+    LinkedList<User*>* userFriends = userPtr->getFriends();
+    Node<Video>* video = videos.first();
+    while (video) { // Go through all videos to see if the user's friends are subscribed.
+        Node<User*>* temp = userFriends->first();
+
+        while (temp) { // Go through all users to check if any of them are subscribed.
+            if(isSubscribed(temp, video->getDataPtr())) {
+                cout << video->getData();
+                break;
+            }
+            temp = temp->getNext();
+        }
+
+        video = video->getNext();
+    }
+
 }
 
 bool VideoShare::isConnected(const string &userName1, const string &userName2) {
@@ -211,12 +238,15 @@ Node<T *> *VideoShare::nodeAtIndex(const LinkedList<T*>* list, int index) {
 
 bool VideoShare::isSubscribed(Node<User*>* user, const Video* video) {
     LinkedList<Video*>* userSubscriptions = user->getData()->getSubscriptions();
-
     bool subscribed = false;
-    Node<Video*> *temp = userSubscriptions->getHead()->getNext();
+    Node<Video*> *temp = userSubscriptions->first();
+
     while (temp) { // Search for the specific video in subscriptions
-        if (temp->getData()->getTitle() == video->getTitle())
+
+        if (*(temp->getData()) == *video) {
             subscribed = true;
+            break;
+        }
         temp = temp->getNext();
     }
 

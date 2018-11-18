@@ -47,5 +47,3 @@ public:
 
 
 #endif	/* VIDEOSHARE_HPP */
-
-

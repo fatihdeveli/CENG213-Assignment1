@@ -55,7 +55,7 @@ LinkedList<T>::LinkedList () {
 template<class T>
 LinkedList<T>::LinkedList(const LinkedList<T> &ll) {
     head = new Node<T>();
-    length = ll.length;
+    length = ll.getLength();
     if (ll.first()) {
         Node<T> *newNode = new Node<T>(ll.first()->getData());
         head->setNext(newNode);
@@ -78,6 +78,7 @@ LinkedList<T> &LinkedList<T>::operator=(const LinkedList<T> &ll) {
             p = p->getNext();
             r = r->getNext();
         }
+        length = ll.getLength();
     }
     return *this;
 }
@@ -133,13 +134,25 @@ void LinkedList<T>::insertNode(Node<T> *prev, const T &data) {
         else { // Insert at the end
             prev->setNext(newNode);
         }
+
         length++;
     }
 }
 
 template<class T>
 void LinkedList<T>::deleteNode(Node<T> *prevNode) {
-    if (prevNode) {
+    /*if(prevNode)
+    {
+        Node<T>* temp = prevNode->getNext();
+        prevNode->getNext()->setNext(temp ->getNext());// = temp ->getNext();
+        delete temp;
+        temp = NULL;
+    }
+    length--;
+
+
+
+    */if (prevNode) {
         if (prevNode->getNext()->getNext()) { // Deleting from the middle
             Node<T> *temp = prevNode->getNext()->getNext();
             delete prevNode->getNext();

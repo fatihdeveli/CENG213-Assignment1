@@ -70,5 +70,4 @@ void Node<T>::setNext(Node<T> *newNext) {
 
 
 /* end of your implementations*/
-#endif	
-
+#endif
