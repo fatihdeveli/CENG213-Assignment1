@@ -14,7 +14,11 @@ private:
     LinkedList<User> users;
     LinkedList<Video> videos;
     /* TO-DO: you can  private members(functions/variables) below */
-
+    template<class T>
+    Node<T*>* nodeAtIndex(const LinkedList<T*>* list, int index);
+    bool isSubscribed(Node<User*>* user, const Video* video);
+    template<class T>
+    bool contains(LinkedList<T>* list, Node<T> &n);
 
     /* end of private member declaration */
 public:

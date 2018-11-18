@@ -121,31 +121,32 @@ void VideoShare::unSubscribe(const string &userName, const string &videoTitle) {
 }
 
 void VideoShare::deleteUser(const string &userName) {
-    Node<User>* userNode = users.findNode(User(userName));
-    User* user = userNode->getDataPtr();
+    User user = User(userName);
+    Node<User>* userNode = users.findNode(user);
+    if (!userNode) return;
+    User* userPtr = userNode->getDataPtr();
 
     // Remove all friendships of the user
     for (Node<User> *temp = users.first(); temp; temp = temp->getNext()) {
-        temp->getDataPtr()->removeFriend(user);
+        temp->getDataPtr()->removeFriend(userPtr);
     }
-    users.deleteNode(users.findPrev(*user));
+    users.deleteNode(users.findPrev(*userPtr));
 }
 
-void VideoShare::sortUserSubscriptions(const string &userName) { // TODO: fix
+void VideoShare::sortUserSubscriptions(const string &userName) {
     Node<User>* userNode = users.findNode(User(userName));
     User* user = userNode->getDataPtr();
     LinkedList<Video*>* userSubs = user->getSubscriptions();
 
-    // Bubble sort
-    Node<Video*> *tempi = userSubs->first(); // Node at index i
-    int n = userSubs->getLength();
+     // Bubble sort
     bool sorted = false;
-    for (int i = 0; (i < n-1) && !sorted; i++, tempi=tempi->getNext()) {
+    int n = (int)userSubs->getLength();
+    for (int i = 0; (i < n-1) && !sorted; i++) {
         sorted = true;
-        Node<Video*> *tempj = userSubs->first(); // Node at index j-1
-        for (int j = 1; j <= n-i-1; j++, tempi=tempi->getNext()) {
-            if (tempj->getData()->getTitle() > tempj->getNext()->getData()->getTitle()) {
-                userSubs->swap(j, j-1);
+        for (int j = 1; j <= n-i-1; j++) {
+            // if (list[j−1] > list[j])
+            if (nodeAtIndex(userSubs, j-1)->getData()->getTitle() > nodeAtIndex(userSubs, j)->getData()->getTitle()) {
+                userSubs->swap(j-1, j);
                 sorted = false;
             }
         }
@@ -165,13 +166,70 @@ void VideoShare::printFriendsOfUser(const string &userName) {
 }
 
 void VideoShare::printCommonSubscriptions(const string &userName1, const string &userName2) {
+    User* user1 = users.findNode(User(userName1))->getDataPtr();
+    User* user2 = users.findNode(User(userName2))->getDataPtr();
+    Node<Video*>* user1Video = user1->getSubscriptions()->getHead()->getNext();
+    Node<Video*>* user2Video = user2->getSubscriptions()->getHead()->getNext();
+
+    while (user1Video && user2Video) {
+        if (user1Video->getData()->getTitle() == user2Video->getData()->getTitle()) { // Common subscription
+            cout << *(user1Video->getData());
+            user1Video = user1Video->getNext();
+            user2Video = user2Video->getNext();
+        }
+        else if (user1Video->getData()->getTitle() < user2Video->getData()->getTitle()) {
+            user1Video = user1Video->getNext();
+        }
+
+        else if (user1Video->getData()->getTitle() > user2Video->getData()->getTitle()) {
+            user2Video = user2Video->getNext();
+        }
+        else cout << "Something went wrong." << endl;
+    }
 
 }
 
 void VideoShare::printFriendSubscriptions(const string &userName) {
-
+    
 }
 
 bool VideoShare::isConnected(const string &userName1, const string &userName2) {
+    return false;
+}
+
+template<class T>
+Node<T *> *VideoShare::nodeAtIndex(const LinkedList<T*>* list, int index) {
+
+    Node<T*>* node = list->getHead()->getNext();
+    // Find the node with index
+
+    for (int i = 0; i < index; i++) {
+        node = node->getNext();
+    }
+    return node;
+}
+
+bool VideoShare::isSubscribed(Node<User*>* user, const Video* video) {
+    LinkedList<Video*>* userSubscriptions = user->getData()->getSubscriptions();
+
+    bool subscribed = false;
+    Node<Video*> *temp = userSubscriptions->getHead()->getNext();
+    while (temp) { // Search for the specific video in subscriptions
+        if (temp->getData()->getTitle() == video->getTitle())
+            subscribed = true;
+        temp = temp->getNext();
+    }
+
+    return subscribed;
+}
+
+template<class T>
+bool VideoShare::contains(LinkedList<T> *list, Node<T> &n) {
+    Node<T> *temp = list->first();
+    while (temp) {
+        if (temp->getData() == n.getData())
+            return true;
+        temp = temp->getNext();
+    }
     return false;
 }

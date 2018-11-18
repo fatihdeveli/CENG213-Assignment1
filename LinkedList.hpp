@@ -114,7 +114,6 @@ Node<T> *LinkedList<T>::findPrev(const T &data) const {
 template<class T>
 Node<T> *LinkedList<T>::findNode(const T &data) const {
     Node<T> *temp = first();
-
     while (temp) {
         if (temp->getData() == data) return temp;
         temp = temp->getNext();
@@ -165,7 +164,7 @@ void LinkedList<T>::clear() {
 
 template<class T>
 size_t LinkedList<T>::getLength() const {
-    return length;
+    return (size_t) length;
 }
 
 template<class T>
@@ -175,7 +174,7 @@ void LinkedList<T>::swap(int index1, int index2) { // Pointer swap
     // Find the node with index1 and its previous
     node1prev = head;
     node1 = node1prev->getNext();
-    for (int i = 1; i < index1; i++) {
+    for (int i = 0; i < index1; i++) {
         node1prev = node1prev->getNext();
         node1 = node1->getNext();
     }
@@ -188,11 +187,23 @@ void LinkedList<T>::swap(int index1, int index2) { // Pointer swap
         node2 = node2->getNext();
     }
 
-    Node<T>* temp = node2->getNext();
-    node2->setNext(node1->getNext());
-    node2prev->setNext(node1);
-    node1->setNext(temp);
-    node1prev->setNext(node2);
+    if (node1->getNext() == node2) { // Exceptional case
+        node1prev->setNext(node2);
+        node1->setNext(node2->getNext());
+        node2->setNext(node1);
+    }
+    else if (node2->getNext() == node1){ // Exceptional case
+        node2prev->setNext(node1);
+        node2->setNext(node1->getNext());
+        node1->setNext(node2);
+    }
+    else { // Regular case where swap nodes are not neighbors
+        Node<T>* temp = node2->getNext();
+        node2->setNext(node1->getNext());
+        node2prev->setNext(node1);
+        node1->setNext(temp);
+        node1prev->setNext(node2);
+    }
 }
 
 /* end of your implementations*/
