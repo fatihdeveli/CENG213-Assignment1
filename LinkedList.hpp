@@ -55,7 +55,7 @@ LinkedList<T>::LinkedList () {
 template<class T>
 LinkedList<T>::LinkedList(const LinkedList<T> &ll) {
     head = new Node<T>();
-    length = ll.getLength();
+    length = (int) ll.getLength();
     if (ll.first()) {
         Node<T> *newNode = new Node<T>(ll.first()->getData());
         head->setNext(newNode);
@@ -78,7 +78,7 @@ LinkedList<T> &LinkedList<T>::operator=(const LinkedList<T> &ll) {
             p = p->getNext();
             r = r->getNext();
         }
-        length = ll.getLength();
+        length = (int) ll.getLength();
     }
     return *this;
 }

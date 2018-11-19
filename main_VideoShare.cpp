@@ -18,10 +18,10 @@ int main(int argc, char* argv[]) {
 
     //add friendship
     cout<<"Add Friendship"<<endl;
-    vs1.addFriendship("userName284", "userName341");cout << "added" << endl;
-    vs1.addFriendship("userName284", "userName392");cout << "added" << endl;
-    vs1.addFriendship("userName284", "userName265");cout << "added" << endl;
-    vs1.addFriendship("userName284", "userName163");cout << "added" << endl;
+    vs1.addFriendship("userName284", "userName341");
+    vs1.addFriendship("userName284", "userName392");
+    vs1.addFriendship("userName284", "userName265");
+    vs1.addFriendship("userName284", "userName163");
 
     cout << "Friends  of userName284" << endl;
     vs1.printFriendsOfUser("userName284");
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 
     cout << "Subscriptions of userName341" << endl;
     vs1.printUserSubscriptions("userName341");
- /*
+    
     cout<<"sortUserSubscriptions"<<endl;
     vs1.sortUserSubscriptions("userName056");
 
@@ -87,6 +87,6 @@ int main(int argc, char* argv[]) {
     cout << "Subscriptions of userName341's friends" << endl;        
     vs1.printFriendSubscriptions("userName341");
     cout<<"END OF TESTS.."<<endl;
-  */
+    
     return 0;
 }
