@@ -88,11 +88,14 @@ void VideoShare::removeFriendship(const string &userName1, const string &userNam
     User user2 = User(userName2);
     Node<User>* userNode1 = users.findNode(user1); // Pointer to the node in the friends list
     Node<User>* userNode2 = users.findNode(user2); //
-    User* user1Ptr = userNode1->getDataPtr(); // Pointer to the user (of the node) in the friends list
-    User* user2Ptr = userNode2->getDataPtr(); //
-    userNode1->getDataPtr()->removeFriend(user2Ptr); // Remove user2 from user1's friend list
-    userNode2->getDataPtr()->removeFriend(user1Ptr); // Remove user1 from user2's friend list
+    if (userNode1 && userNode2) {
+        User* user1Ptr = userNode1->getDataPtr(); // Pointer to the user (of the node) in the friends list
+        User* user2Ptr = userNode2->getDataPtr(); //
+        userNode1->getDataPtr()->removeFriend(user2Ptr); // Remove user2 from user1's friend list
+        userNode2->getDataPtr()->removeFriend(user1Ptr); // Remove user1 from user2's friend list
+    }
 }
+
 
 void VideoShare::updateUserStatus(const string &userName, Status newStatus) {
     User user = User(userName);
@@ -126,17 +129,22 @@ void VideoShare::deleteUser(const string &userName) {
     if (!userNode) return;
     User* userPtr = userNode->getDataPtr();
 
-    Node<User*>* temp = userNode->getDataPtr()->getFriends()->first();
-    while(temp)
-    {
-        removeFriendship(userName,temp->getData()->getUsername());
+    // Remove the user from others' friend lists
+    /*
+    Node<User> *temp = users.first();
+    while (temp) {
+        LinkedList<User*> *tempFriends = temp->getDataPtr()->getFriends();
+        Node<User*>* prevNode = tempFriends->findPrev(userPtr);
+        tempFriends->deleteNode(prevNode);
+
+        temp = temp->getNext();
+    }*/
+    Node<User> *temp = users.first();
+    while (temp) {
+        removeFriendship(userName, temp->getDataPtr()->getUsername());
         temp = temp->getNext();
     }
 
-    // Remove all friendships of the user
-    for (Node<User> *temp = users.first(); temp; temp = temp->getNext()) {
-        temp->getDataPtr()->removeFriend(userPtr);
-    }
     users.deleteNode(users.findPrev(*userPtr));
 }
 
@@ -169,7 +177,8 @@ void VideoShare::printUserSubscriptions(const string &userName) {
 void VideoShare::printFriendsOfUser(const string &userName) {
     User user = User(userName);
     Node<User>* tempNode = users.findNode(user);
-    tempNode->getData().printFriends();
+    if (tempNode)
+        tempNode->getData().printFriends();
 }
 
 void VideoShare::printCommonSubscriptions(const string &userName1, const string &userName2) {
@@ -201,26 +210,54 @@ void VideoShare::printFriendSubscriptions(const string &userName) {
     User user = User(userName);
     Node<User>* userNode = users.findNode(user);
     if (!userNode) return;
-    User* userPtr = userNode->getDataPtr();
-    LinkedList<User*>* userFriends = userPtr->getFriends();
+    LinkedList<Video*> tempList = LinkedList<Video*>(); // Keeps the record of friend subscriptions
+    LinkedList<User*>* userFriends = userNode->getDataPtr()->getFriends();
     Node<Video>* video = videos.first();
     while (video) { // Go through all videos to see if the user's friends are subscribed.
         Node<User*>* temp = userFriends->first();
 
         while (temp) { // Go through all users to check if any of them are subscribed.
             if(isSubscribed(temp, video->getDataPtr())) {
-                cout << video->getData();
+                tempList.insertNode(tempList.getHead(), video->getDataPtr());
+                //cout << video->getData();
                 break;
             }
             temp = temp->getNext();
         }
-
         video = video->getNext();
     }
+
+    sortList(&tempList);
+
+    // Print the sorted list
+    Node<Video*> *temp = tempList.first();
+    while (temp) {
+        cout << *(temp->getData());
+        temp = temp->getNext();
+    }
+    cout << endl;
+
 
 }
 
 bool VideoShare::isConnected(const string &userName1, const string &userName2) {
+    // Connected friends of user 1
+    LinkedList<User*> connectedList = LinkedList<User*>();
+
+    Node<User>* userNode1 = users.findNode(User(userName1));
+    Node<User>* userNode2 = users.findNode(User(userName2));
+
+    if (!(userNode1 && userNode2)) return false; // Return if any of the users does not exist.
+
+    // Following recursive call adds all connected users to connectedList
+    isConnectedHelper(&connectedList, userNode1->getDataPtr());
+
+    // Return true if target is in connectedList
+    Node<User*> *foundNode = connectedList.findNode(userNode2->getDataPtr());
+    if (foundNode) {
+        return true;
+    }
+
     return false;
 }
 
@@ -262,4 +299,41 @@ bool VideoShare::contains(LinkedList<T> *list, Node<T> &n) {
         temp = temp->getNext();
     }
     return false;
+}
+
+template<class T>
+void VideoShare::sortList(LinkedList<T*>* list) {
+    // Bubble sort
+    bool sorted = false;
+    int n = (int)list->getLength();
+    for (int i = 0; (i < n-1) && !sorted; i++) {
+        sorted = true;
+        for (int j = 1; j <= n-i-1; j++) {
+            // if (list[j−1] > list[j])
+            if (nodeAtIndex(list, j-1)->getData()->getTitle() > nodeAtIndex(list, j)->getData()->getTitle()) {
+                list->swap(j-1, j);
+                sorted = false;
+            }
+        }
+    }
+}
+
+void VideoShare::isConnectedHelper(LinkedList<User*> *connectedList, User* source) {
+    Node<User*> sourceNode = Node<User*>(source);
+    // If connectedList does not contain this user, add the user to connectedList
+    // and call the recursive function for all friends.
+    if (!contains(connectedList, sourceNode)) {
+        connectedList->insertNode(connectedList->getHead(), sourceNode.getData());
+        LinkedList<User*> *friendList = source->getFriends();
+        if (friendList->getLength() != 0) {
+            Node<User*> *temp = friendList->first();
+            while (temp) {
+                isConnectedHelper(connectedList, temp->getData());
+                temp = temp->getNext();
+            }
+        }
+    }
+    // If connectedList contains this user, return.
+    else return;
+
 }

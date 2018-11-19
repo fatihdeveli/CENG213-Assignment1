@@ -19,6 +19,9 @@ private:
     bool isSubscribed(Node<User*>* user, const Video* video);
     template<class T>
     bool contains(LinkedList<T>* list, Node<T> &n);
+    template<class T>
+    void sortList(LinkedList<T*>* list);
+    void isConnectedHelper(LinkedList<User*> *connectedList, User* source);
 
     /* end of private member declaration */
 public:

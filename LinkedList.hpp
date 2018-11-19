@@ -141,28 +141,14 @@ void LinkedList<T>::insertNode(Node<T> *prev, const T &data) {
 
 template<class T>
 void LinkedList<T>::deleteNode(Node<T> *prevNode) {
-    /*if(prevNode)
-    {
+    if(prevNode) {
         Node<T>* temp = prevNode->getNext();
-        prevNode->getNext()->setNext(temp ->getNext());// = temp ->getNext();
-        delete temp;
-        temp = NULL;
-    }
-    length--;
-
-
-
-    */if (prevNode) {
-        if (prevNode->getNext()->getNext()) { // Deleting from the middle
-            Node<T> *temp = prevNode->getNext()->getNext();
-            delete prevNode->getNext();
-            prevNode->setNext(temp);
+        if (temp) {
+            Node<T>* a = temp->getNext();
+            prevNode->setNext(a);
+            delete temp;
+            length--;
         }
-        else { // Deleting from the end
-            delete prevNode->getNext();
-            prevNode->setNext(NULL);
-        }
-        length--;
     }
 }
 
