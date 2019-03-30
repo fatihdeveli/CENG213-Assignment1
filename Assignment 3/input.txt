@@ -1,10 +1,30 @@
-music;guitar;res_low;15
-music;piano;res_medium;20
-music;bass;res_high;25
-music;drum;res_low;15
-music;harp;res_medium;20
-food;fish;res_high;20
-food;chips;res_low;10
-food;tacos;res_medium;15
-food;nachos;res_high;20
-sports;golf;res_low;30
+Sarah Sarahspass
+Vicky vickypass
+Devon devonspass
+Devon devonspass
+Vale valespass
+Vale wrong
+Casey caseysspassword
+Ellie elspassword
+Devon wrong
+Morgan morganspass
+Morgan wrong
+Vale valespass
+Ellie wrong
+Orion orionspass
+Chuck chuckspass
+Beckman generalspass
+Emmett hothothothot
+Bryce brycespass
+Casey wrong
+Tang tangspass
+Beckman wrong
+Morgan wrong
+Alex alexspass
+Bryce wrong
+AnnaWu Annaspass
+Roark Tedspass
+Vicky wrong
+Vicky wrong
+Vicky wrong
+
